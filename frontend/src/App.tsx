@@ -10,6 +10,8 @@ import { Analytics } from './pages/Analytics';
 import { CheckIns } from './pages/CheckIns';
 import { SharedGoals } from './pages/SharedGoals';
 import { Settings } from './pages/Settings';
+import { AdminGoals } from './pages/AdminGoals';
+import { AdminReports } from './pages/AdminReports';
 import { LottieIcon } from './components/ui/LottieIcon';
 import { supabase } from './lib/supabase';
 import { useAuthStore } from './store/authStore';
@@ -202,10 +204,13 @@ export default function App() {
       case 'settings':
         return <Settings onViewChange={setCurrentView} />;
       case 'goals':
-        // For admin - show analytics instead of placeholder
+        // For admin - show admin goals page
+        if (role === 'admin') return <AdminGoals onViewChange={setCurrentView} />;
         return <Analytics onViewChange={setCurrentView} />;
       case 'reports':
-        // For manager/admin - show analytics instead of placeholder
+        // For admin - show admin reports page
+        if (role === 'admin') return <AdminReports onViewChange={setCurrentView} />;
+        // For manager - show analytics
         return <Analytics onViewChange={setCurrentView} />;
       default:
         return (
