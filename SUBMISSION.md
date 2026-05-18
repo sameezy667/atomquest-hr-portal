@@ -10,9 +10,9 @@
 ## 🚀 Project Information
 - **Project Name:** AtomQuest HR Portal
 - **Category:** Performance Management System
-- **GitHub Repository:** [ADD YOUR GITHUB URL HERE]
-- **Live Demo:** [IF DEPLOYED, ADD URL HERE]
-- **Video Demo:** [ADD YOUTUBE/LOOM LINK HERE]
+- **GitHub Repository:** https://github.com/sameezy667/atomquest-hr-portal
+- **Live Demo:** [WILL BE ADDED AFTER VERCEL DEPLOYMENT]
+- **Video Demo:** [WILL BE ADDED AFTER RECORDING]
 
 ---
 
