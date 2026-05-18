@@ -34,36 +34,42 @@ npm-debug.log*
 
 # Convenience files (not needed in repo)
 *.bat
-apply-new-features.bat
-deploy.bat
-prepare-submission.bat
+*.txt
+!README.txt
+
+# Convenience SQL files (keep only migrations and seeds in supabase folder)
+/*_PROFILES.sql
+/*_SETUP*.sql
+/*_FIX*.sql
+/*_USER*.sql
+/APPLY_*.sql
+/EASY_*.sql
+/CREATE_*.sql
+/UPDATE_*.sql
 
 # Documentation files (keep only essential ones)
-BRD_COMPLIANCE_REPORT.md
-OPTIONAL_QUICK_WINS.md
-QUICK_SUBMISSION_STEPS.md
-START_HERE.md
+# Keep: README.md, SUBMISSION.md, frontend/README.md
+# Ignore all others:
+BRD_*.md
+OPTIONAL_*.md
+QUICK_*.md
+START_*.md
 SUBMISSION_CHECKLIST.md
 SUBMISSION_SUMMARY.md
 SUBMISSION_VISUAL_GUIDE.md
-FIXES_SUMMARY.md
-FINAL_SUBMISSION_SUMMARY.md
-EMAIL_NOTIFICATIONS_SETUP.md
-DATE_WINDOW_ENFORCEMENT.md
-NEW_FEATURES_SUMMARY.md
-TESTING_NEW_FEATURES.md
-IMPLEMENTATION_COMPLETE.md
-README_NEW_FEATURES.md
-FEATURES_ADDED_SUMMARY.txt
-FINAL_IMPLEMENTATION_STATUS.txt
-QUICK_REFERENCE.txt
-DEPLOYMENT_GUIDE.md
-
-# Keep only these documentation files:
-# - README.md (main project readme)
-# - SUBMISSION.md (hackathon submission)
-# - prd.md (product requirements)
-# - context.md (project context)
+FIXES_*.md
+FINAL_*.md
+EMAIL_*.md
+DATE_*.md
+NEW_*.md
+TESTING_*.md
+IMPLEMENTATION_*.md
+DEPLOYMENT_*.md
+TROUBLESHOOTING.md
+IMMEDIATE_*.md
+SUPABASE_*.md
+context.md
+prd.md
 
 # Test files
 test-profile.js
