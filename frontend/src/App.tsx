@@ -93,33 +93,67 @@ export default function App() {
     try {
       console.log('📥 Fetching profile for user:', userId);
       
-      // Simplified query without timeout race condition
+      // First, try to get the profile
       const { data, error } = await supabase
         .from('profiles')
         .select('id, full_name, email, role, designation, department_id')
         .eq('id', userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle() instead of single() to handle missing profiles
       
       if (error) {
         console.error('❌ Profile fetch error:', error);
-        // If profile doesn't exist, sign out
-        console.warn('⚠️ Profile not found, signing out...');
         await supabase.auth.signOut();
         clearAuth();
         setLoading(false);
         return;
       }
       
-      if (data) {
-        console.log('✅ Profile loaded:', data.full_name);
-        setProfile(data as any);
-        setLoading(false); // ✅ CRITICAL FIX: Set loading to false after successful profile load
-      } else {
-        console.warn('⚠️ No profile data returned, signing out...');
-        await supabase.auth.signOut();
-        clearAuth();
+      // If profile doesn't exist, create it
+      if (!data) {
+        console.log('⚠️ Profile not found, creating new profile...');
+        
+        // Get user email from auth
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user?.email) {
+          console.error('❌ Cannot create profile: no email found');
+          await supabase.auth.signOut();
+          clearAuth();
+          setLoading(false);
+          return;
+        }
+        
+        // Create new profile with default values
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: userId,
+            email: user.email,
+            full_name: user.email.split('@')[0], // Use email prefix as default name
+            role: 'employee', // Default role
+            designation: 'Employee',
+            department_id: null
+          })
+          .select('id, full_name, email, role, designation, department_id')
+          .single();
+        
+        if (insertError) {
+          console.error('❌ Failed to create profile:', insertError);
+          await supabase.auth.signOut();
+          clearAuth();
+          setLoading(false);
+          return;
+        }
+        
+        console.log('✅ Profile created:', newProfile.full_name);
+        setProfile(newProfile as any);
         setLoading(false);
+        return;
       }
+      
+      console.log('✅ Profile loaded:', data.full_name);
+      setProfile(data as any);
+      setLoading(false);
     } catch (error: any) {
       console.error('❌ Failed to fetch profile:', error);
       await supabase.auth.signOut();
