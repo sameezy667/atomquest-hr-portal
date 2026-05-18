@@ -1,7 +1,7 @@
 /**
  * @file App.tsx
  * @description Main application component with auto-profile creation
- * @version 1.1.0 - Fixed infinite loading issue with auto-profile creation
+ * @version 1.1.1 - Force rebuild for Vercel deployment
  */
 import { useEffect, useState, useRef } from 'react';
 import { MainLayout } from './components/layout/MainLayout';
