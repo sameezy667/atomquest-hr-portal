@@ -40,9 +40,9 @@ export default function App() {
       try {
         console.log('🔄 Starting auth initialization...');
         
-        // Add timeout to prevent infinite loading
+        // Add timeout to prevent infinite loading (increased to 15 seconds)
         const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('Auth timeout')), 10000); // 10 second timeout
+          setTimeout(() => reject(new Error('Auth timeout')), 15000);
         });
         
         const sessionPromise = supabase.auth.getSession();
@@ -110,9 +110,9 @@ export default function App() {
     try {
       console.log('📥 Fetching profile for user:', userId);
       
-      // Add timeout to profile fetch
+      // Add timeout to profile fetch (increased to 10 seconds)
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000); // 5 second timeout
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 10000);
       });
       
       const profilePromise = supabase
@@ -122,15 +122,22 @@ export default function App() {
         .maybeSingle();
       
       // Race between fetch and timeout
-      const { data, error } = await Promise.race([
+      const result = await Promise.race([
         profilePromise,
         timeoutPromise
       ]) as any;
       
+      // Check if we got an error or timeout
+      if (result instanceof Error) {
+        throw result;
+      }
+      
+      const { data, error } = result;
+      
       if (error) {
         console.error('❌ Profile fetch error:', error);
-        await supabase.auth.signOut();
-        clearAuth();
+        // Don't sign out immediately, just show error
+        setConnectionError(true);
         setLoading(false);
         return;
       }
@@ -144,8 +151,7 @@ export default function App() {
         
         if (!user?.email) {
           console.error('❌ Cannot create profile: no email found');
-          await supabase.auth.signOut();
-          clearAuth();
+          setConnectionError(true);
           setLoading(false);
           return;
         }
@@ -156,8 +162,8 @@ export default function App() {
           .insert({
             id: userId,
             email: user.email,
-            full_name: user.email.split('@')[0], // Use email prefix as default name
-            role: 'employee', // Default role
+            full_name: user.email.split('@')[0],
+            role: 'employee',
             designation: 'Employee',
             department_id: null
           })
@@ -166,8 +172,7 @@ export default function App() {
         
         if (insertError) {
           console.error('❌ Failed to create profile:', insertError);
-          await supabase.auth.signOut();
-          clearAuth();
+          setConnectionError(true);
           setLoading(false);
           return;
         }
@@ -183,9 +188,8 @@ export default function App() {
       setLoading(false);
     } catch (error: any) {
       console.error('❌ Failed to fetch profile:', error);
-      // On timeout or error, sign out and clear
-      await supabase.auth.signOut();
-      clearAuth();
+      // On timeout, show connection error instead of signing out
+      setConnectionError(true);
       setLoading(false);
     }
   }
