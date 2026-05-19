@@ -47,9 +47,16 @@ export function GoalReview({ onViewChange }: { onViewChange: (view: View) => voi
           .in('status', ['submitted', 'under_review'])
           .order('submitted_at', { ascending: true })
           .limit(1)
-          .single();
+          .maybeSingle();
         
         if (error) throw error;
+        
+        if (!data) {
+          // No sheets to review
+          setLoading(false);
+          return;
+        }
+        
         setSheet(data);
         setGoals(data.goals || []);
       } else {
@@ -65,9 +72,16 @@ export function GoalReview({ onViewChange }: { onViewChange: (view: View) => voi
             )
           `)
           .eq('id', sheetId)
-          .single();
+          .maybeSingle();
         
         if (error) throw error;
+        
+        if (!data) {
+          console.error('Sheet not found');
+          setLoading(false);
+          return;
+        }
+        
         setSheet(data);
         setGoals(data.goals || []);
       }

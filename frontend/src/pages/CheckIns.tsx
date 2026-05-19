@@ -51,7 +51,7 @@ export function CheckIns({ onViewChange }: { onViewChange: (view: View) => void 
         .select('*')
         .eq('cycle_year', CURRENT_YEAR)
         .eq('cycle_type', CURRENT_QUARTER)
-        .single();
+        .maybeSingle();
 
       if (cycleError) {
         console.error('Error fetching cycle:', cycleError);
