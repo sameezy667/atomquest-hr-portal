@@ -52,7 +52,7 @@ AtomQuest HR Portal is a **comprehensive goal-setting and performance tracking p
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone github.com/sameezy667/atomquest-hr-portal.git
 cd atomq_hr
 
 # 2. Start Supabase backend
