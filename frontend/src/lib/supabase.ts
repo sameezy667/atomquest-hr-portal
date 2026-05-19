@@ -23,5 +23,22 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage,
+    storageKey: 'atomq-auth-token',
+    flowType: 'pkce',
+  },
+  global: {
+    headers: {
+      'x-client-info': 'atomquest-hr-portal',
+    },
+  },
+  db: {
+    schema: 'public',
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
   },
 });

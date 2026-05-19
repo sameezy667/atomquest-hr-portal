@@ -236,7 +236,13 @@ export function MainLayout({ children, role, onRoleChange, currentView, onViewCh
                   </button>
                 </div>
                 <div className="flex-1 overflow-y-auto">
-                  <div className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                  <div 
+                    className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => {
+                      setShowNotifications(false);
+                      onViewChange('dashboard');
+                    }}
+                  >
                     <div className="flex gap-3">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                       <div className="flex-1">
@@ -246,7 +252,13 @@ export function MainLayout({ children, role, onRoleChange, currentView, onViewCh
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                  <div 
+                    className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => {
+                      setShowNotifications(false);
+                      onViewChange('check-ins');
+                    }}
+                  >
                     <div className="flex gap-3">
                       <div className="w-2 h-2 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
                       <div className="flex-1">
@@ -256,7 +268,13 @@ export function MainLayout({ children, role, onRoleChange, currentView, onViewCh
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
+                  <div 
+                    className="p-4 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => {
+                      setShowNotifications(false);
+                      onViewChange('shared-goals');
+                    }}
+                  >
                     <div className="flex gap-3">
                       <div className="w-2 h-2 bg-gray-300 rounded-full mt-2 flex-shrink-0"></div>
                       <div className="flex-1">
@@ -268,7 +286,13 @@ export function MainLayout({ children, role, onRoleChange, currentView, onViewCh
                   </div>
                 </div>
                 <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
-                  <button className="text-sm text-blue-600 hover:text-blue-700 font-semibold">
+                  <button 
+                    onClick={() => {
+                      setShowNotifications(false);
+                      onViewChange('dashboard');
+                    }}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                  >
                     View All Notifications
                   </button>
                 </div>

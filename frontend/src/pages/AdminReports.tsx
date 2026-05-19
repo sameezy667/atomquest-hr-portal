@@ -87,7 +87,7 @@ export function AdminReports({ onViewChange }: { onViewChange: (view: View) => v
             full_name,
             email,
             designation,
-            department:departments(name)
+            department:departments!profiles_department_id_fkey(name)
           ),
           goals(
             title,
