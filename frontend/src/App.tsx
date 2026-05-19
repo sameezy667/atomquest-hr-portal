@@ -40,7 +40,17 @@ export default function App() {
       try {
         console.log('🔄 Starting auth initialization...');
         
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Auth timeout')), 10000); // 10 second timeout
+        });
+        
+        const sessionPromise = supabase.auth.getSession();
+        
+        const { data: { session }, error } = await Promise.race([
+          sessionPromise,
+          timeoutPromise
+        ]) as any;
         
         if (!mounted) return;
         
@@ -57,15 +67,17 @@ export default function App() {
         if (session?.user) {
           console.log('👤 Fetching profile for user:', session.user.id);
           await fetchProfile(session.user.id);
+        } else {
+          // No session, stop loading
+          if (mounted) {
+            setLoading(false);
+          }
         }
-        
-        if (mounted) {
-          setLoading(false);
-        }
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Failed to initialize auth:', error);
         if (mounted) {
-          setConnectionError(true);
+          // On timeout or error, clear everything and show login
+          clearAuth();
           setLoading(false);
         }
       }
@@ -98,12 +110,22 @@ export default function App() {
     try {
       console.log('📥 Fetching profile for user:', userId);
       
-      // First, try to get the profile
-      const { data, error } = await supabase
+      // Add timeout to profile fetch
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000); // 5 second timeout
+      });
+      
+      const profilePromise = supabase
         .from('profiles')
         .select('id, full_name, email, role, designation, department_id')
         .eq('id', userId)
-        .maybeSingle(); // Use maybeSingle() instead of single() to handle missing profiles
+        .maybeSingle();
+      
+      // Race between fetch and timeout
+      const { data, error } = await Promise.race([
+        profilePromise,
+        timeoutPromise
+      ]) as any;
       
       if (error) {
         console.error('❌ Profile fetch error:', error);
@@ -161,6 +183,7 @@ export default function App() {
       setLoading(false);
     } catch (error: any) {
       console.error('❌ Failed to fetch profile:', error);
+      // On timeout or error, sign out and clear
       await supabase.auth.signOut();
       clearAuth();
       setLoading(false);
